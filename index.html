@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mishra AI World — AI-Powered Creative Studio</title>
+<meta name="description" content="Mishra AI World — video editing, thumbnail design, graphic design, AI content and photo editing by Om Mishra.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg-0:#05070d;
+  --bg-1:#090d17;
+  --bg-2:#0d1220;
+  --line:rgba(255,255,255,0.09);
+  --line-strong:rgba(255,255,255,0.16);
+  --text-0:#eef1f8;
+  --text-1:#aab1c4;
+  --text-2:#6b7386;
+  --cyan:#48d9f4;
+  --cyan-soft:rgba(72,217,244,0.14);
+  --purple:#9d6bff;
+  --purple-soft:rgba(157,107,255,0.14);
+  --orange:#ff9452;
+  --orange-soft:rgba(255,148,82,0.12);
+  --font-display:'Unbounded', sans-serif;
+  --font-body:'Inter', sans-serif;
+  --font-mono:'Space Mono', monospace;
+  --ease: cubic-bezier(.16,.8,.24,1);
+  --container: 1240px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+}
+body{
+  background:var(--bg-0);
+  color:var(--text-0);
+  font-family:var(--font-body);
+  line-height:1.5;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img{;max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;}
+.wrap{max-width:var(--container);margin:0 auto;padding:0 32px;}
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--cyan);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);}
+.section{position:relative;padding:120px 0;}
+@media (max-width:768px){.section{padding:80px 0;}}
+.section-head{max-width:640px;margin-bottom:64px;}
+.section-head h2{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:clamp(34px,5vw,58px);
+  line-height:1.05;
+  letter-spacing:-0.01em;
+  margin-top:16px;
+}
+.section-head p{color:var(--text-1);font-size:17px;margin-top:18px;max-width:520px;}
+
+/* grain overlay */
+.grain{
+  position:fixed;inset:0;pointer-events:none;z-index:999;opacity:0.035;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.glow{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;}
+
+/* ============ NAV ============ */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  padding:22px 0;
+  transition:all .5s var(--ease);
+  border-bottom:1px solid transparent;
+}
+header.scrolled{
+  padding:14px 0;
+  background:rgba(6,9,16,0.72);
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;}
+.logo{
+  font-family:var(--font-display);font-weight:700;font-size:16.5px;letter-spacing:0.01em;
+  display:flex;align-items:center;gap:10px;
+}
+.logo .dot{width:8px;height:8px;border-radius:2px;background:linear-gradient(135deg,var(--cyan),var(--purple));transform:rotate(45deg);}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{
+  font-size:14px;color:var(--text-1);position:relative;padding:4px 0;transition:color .3s;
+}
+.nav-links a:hover{color:var(--text-0);}
+.nav-links a::after{
+  content:'';position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--cyan);transition:width .3s var(--ease);
+}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{
+  font-family:var(--font-mono);font-size:12.5px;letter-spacing:0.03em;
+  padding:11px 22px;border-radius:100px;border:1px solid var(--line-strong);
+  background:rgba(255,255,255,0.03);
+  transition:all .35s var(--ease);
+}
+.nav-cta:hover{border-color:var(--cyan);box-shadow:0 0 24px var(--cyan-soft);transform:translateY(-1px);}
+.hamburger{display:none;flex-direction:column;gap:5px;width:26px;background:none;border:none;z-index:600;}
+.hamburger span{display:block;height:2px;width:100%;background:var(--text-0);transition:all .3s var(--ease);}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+.mobile-menu{
+  position:fixed;inset:0;background:rgba(5,7,13,0.98);backdrop-filter:blur(20px);
+  z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;
+  opacity:0;visibility:hidden;transition:opacity .4s var(--ease),visibility .4s;
+}
+.mobile-menu.open{opacity:1;visibility:visible;}
+.mobile-menu a{font-family:var(--font-display);font-size:26px;font-weight:500;}
+
+@media (max-width:900px){
+  .nav-links,.nav-cta{display:none;}
+  .hamburger{display:flex;}
+}
+
+/* ============ HERO ============ */
+.hero{
+  min-height:100svh;display:flex;align-items:center;position:relative;padding-top:110px;
+}
+.hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:40px;align-items:center;width:100%;}
+.hero-badge{
+  display:inline-flex;padding:8px 16px;border:1px solid var(--line-strong);border-radius:100px;
+  background:rgba(255,255,255,0.03);margin-bottom:28px;
+}
+.hero h1{
+  font-family:var(--font-display);font-weight:800;font-size:clamp(52px,7.2vw,96px);
+  line-height:0.98;letter-spacing:-0.01em;
+}
+.hero h1 .grad{
+  background:linear-gradient(100deg,var(--cyan) 15%,var(--purple) 85%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero-sub{
+  font-family:var(--font-mono);color:var(--text-1);font-size:14.5px;letter-spacing:0.04em;margin-top:26px;
+}
+.hero-desc{font-size:18px;color:var(--text-1);max-width:440px;margin-top:18px;}
+.hero-actions{display:flex;gap:14px;margin-top:38px;flex-wrap:wrap;}
+.btn{
+  position:relative;font-size:14px;font-weight:600;padding:16px 30px;border-radius:100px;
+  display:inline-flex;align-items:center;gap:10px;transition:transform .35s var(--ease);
+}
+.btn-primary{
+  background:linear-gradient(100deg,var(--cyan),var(--purple));color:#050710;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -8px var(--purple-soft);}
+.btn-ghost{border:1px solid var(--line-strong);color:var(--text-0);background:rgba(255,255,255,0.02);}
+.btn-ghost:hover{border-color:var(--cyan);transform:translateY(-2px);}
+
+.hero-visual{position:relative;aspect-ratio:4/5;}
+.frame{
+  position:absolute;inset:0;border-radius:22px;overflow:hidden;
+  border:1px solid var(--line-strong);
+  box-shadow:0 40px 80px -30px rgba(0,0,0,0.7);
+}
+.frame img{width:100%;height:100%;object-fit:cover;object-position:65% 15%;
+  filter:saturate(1.05) contrast(1.03);
+  transform:scale(1.08);opacity:0;transition:opacity 1.2s var(--ease), transform 1.6s var(--ease);
+}
+.frame.in img{opacity:1;transform:scale(1);}
+.frame::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 55%,rgba(5,7,13,0.75) 100%);
+}
+.corner{position:absolute;width:26px;height:26px;border-color:var(--cyan);z-index:3;}
+.corner.tl{top:14px;left:14px;border-top:2px solid;border-left:2px solid;border-radius:6px 0 0 0;}
+.corner.tr{top:14px;right:14px;border-top:2px solid;border-right:2px solid;border-radius:0 6px 0 0;}
+.corner.bl{bottom:14px;left:14px;border-bottom:2px solid;border-left:2px solid;border-radius:0 0 0 6px;}
+.corner.br{bottom:14px;right:14px;border-bottom:2px solid;border-right:2px solid;border-radius:0 0 6px 0;}
+.scan{
+  position:absolute;left:14px;right:14px;height:1px;top:20%;z-index:3;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  box-shadow:0 0 10px var(--cyan);
+  animation:scan 5s ease-in-out infinite;
+}
+@keyframes scan{0%,100%{top:12%;opacity:.9;}50%{top:88%;opacity:.4;}}
+.rec-chip{
+  position:absolute;top:26px;left:26px;z-index:3;font-family:var(--font-mono);font-size:11px;
+  display:flex;align-items:center;gap:6px;color:var(--text-0);letter-spacing:0.05em;
+  background:rgba(5,7,13,0.5);padding:6px 10px;border-radius:100px;border:1px solid var(--line);
+}
+.rec-dot{width:6px;height:6px;border-radius:50%;background:#ff5c5c;animation:pulse 1.6s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.25;}}
+.stat-chip{
+  position:absolute;z-index:4;background:rgba(9,13,23,0.75);backdrop-filter:blur(14px);
+  border:1px solid var(--line-strong);border-radius:14px;padding:14px 18px;
+  font-family:var(--font-mono);font-size:12px;color:var(--text-1);
+  animation:float 6s ease-in-out infinite;
+}
+.stat-chip b{display:block;font-family:var(--font-display);font-size:20px;color:var(--text-0);font-weight:600;}
+.stat-chip.s1{bottom:-22px;left:-18px;animation-delay:0s;}
+.stat-chip.s2{top:24%;right:-22px;animation-delay:1.5s;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;}
+  .hero-visual{order:-1;max-width:340px;margin:0 auto 20px;}
+  .stat-chip{display:none;}
+}
+
+/* ============ REVEAL ============ */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease), transform .8s var(--ease);}
+.reveal.visible{opacity:1;transform:none;}
+.stagger .reveal:nth-child(1){transition-delay:0s;}
+.stagger .reveal:nth-child(2){transition-delay:.08s;}
+.stagger .reveal:nth-child(3){transition-delay:.16s;}
+.stagger .reveal:nth-child(4){transition-delay:.24s;}
+.stagger .reveal:nth-child(5){transition-delay:.32s;}
+
+/* ============ ABOUT ============ */
+.about-grid{display:grid;grid-template-columns:0.85fr 1.15fr;gap:60px;align-items:center;}
+.about-portrait{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line-strong);aspect-ratio:3/4;}
+.about-portrait img{width:100%;height:100%;object-fit:cover;object-position:70% 18%;}
+.about-portrait::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,var(--bg-0) 0%,transparent 40%);}
+.about h2{font-family:var(--font-display);font-size:clamp(30px,4vw,44px);font-weight:700;line-height:1.12;margin-top:16px;}
+.about-text{color:var(--text-1);font-size:17px;margin-top:22px;max-width:520px;}
+.tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px;}
+.tag{
+  font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.05em;padding:9px 15px;
+  border:1px solid var(--line);border-radius:100px;color:var(--text-1);background:rgba(255,255,255,0.02);
+}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin-top:40px;border-radius:14px;overflow:hidden;border:1px solid var(--line);}
+.stat-cell{background:var(--bg-1);padding:22px 20px;}
+.stat-cell b{display:block;font-family:var(--font-display);font-size:26px;background:linear-gradient(100deg,var(--cyan),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.stat-cell span{font-size:12.5px;color:var(--text-2);font-family:var(--font-mono);}
+@media (max-width:900px){.about-grid{grid-template-columns:1fr;}.stat-row{grid-template-columns:1fr 1fr;}}
+
+/* ============ SERVICES ============ */
+.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden;}
+.service-card{
+  background:var(--bg-1);padding:38px 28px;position:relative;overflow:hidden;
+  transition:background .4s var(--ease);
+}
+.service-card:hover{background:var(--bg-2);}
+.service-card .glow-hover{
+  position:absolute;width:200px;height:200px;border-radius:50%;top:-80px;right:-80px;
+  filter:blur(60px);opacity:0;transition:opacity .5s;
+}
+.service-card:hover .glow-hover{opacity:0.5;}
+.service-card:nth-child(1) .glow-hover{background:var(--cyan);}
+.service-card:nth-child(2) .glow-hover{background:var(--purple);}
+.service-card:nth-child(3) .glow-hover{background:var(--orange);}
+.service-card:nth-child(4) .glow-hover{background:var(--cyan);}
+.service-num{font-family:var(--font-mono);font-size:12px;color:var(--text-2);}
+.service-icon{
+  width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--line-strong);margin:20px 0 22px;transition:transform .4s var(--ease),border-color .4s;
+}
+.service-card:hover .service-icon{transform:translateY(-4px);border-color:var(--cyan);}
+.service-icon svg{width:20px;height:20px;stroke:var(--text-0);}
+.service-card h3{font-family:var(--font-display);font-size:19px;font-weight:600;margin-bottom:14px;}
+.service-card ul{list-style:none;color:var(--text-1);font-size:14px;}
+.service-card li{padding:5px 0;position:relative;padding-left:16px;}
+.service-card li::before{content:'—';position:absolute;left:0;color:var(--text-2);}
+@media (max-width:900px){.services-grid{grid-template-columns:1fr 1fr;}}
+@media (max-width:560px){.services-grid{grid-template-columns:1fr;}}
+
+/* ============ PORTFOLIO ============ */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:44px;}
+.filter-btn{
+  font-family:var(--font-mono);font-size:12.5px;padding:10px 18px;border-radius:100px;
+  border:1px solid var(--line);color:var(--text-1);background:transparent;transition:all .3s var(--ease);
+}
+.filter-btn:hover{border-color:var(--line-strong);color:var(--text-0);}
+.filter-btn.active{background:var(--text-0);color:#05070d;border-color:var(--text-0);font-weight:700;}
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;}
+.p-item{
+  position:relative;border-radius:18px;overflow:hidden;cursor:pointer;border:1px solid var(--line);
+  grid-column:span 3;aspect-ratio:4/5;transition:opacity .4s, transform .4s;
+}
+.p-item.big{grid-column:span 4;}
+.p-item.small{grid-column:span 2;}
+.p-item.hide{display:none;}
+.p-item img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease);}
+.p-item:hover img{transform:scale(1.06);}
+.p-overlay{
+  position:absolute;inset:0;background:linear-gradient(0deg,rgba(5,7,13,0.94) 0%,rgba(5,7,13,0.15) 55%,transparent 100%);
+  display:flex;flex-direction:column;justify-content:flex-end;padding:22px;
+}
+.p-cat{font-family:var(--font-mono);font-size:11px;color:var(--cyan);letter-spacing:0.06em;}
+.p-title{font-family:var(--font-display);font-size:19px;font-weight:600;margin-top:6px;}
+.p-desc{font-size:13px;color:var(--text-1);margin-top:6px;max-width:280px;}
+.p-view{
+  margin-top:14px;font-family:var(--font-mono);font-size:11px;display:inline-flex;align-items:center;gap:6px;
+  opacity:0;transform:translateY(6px);transition:all .4s var(--ease);
+}
+.p-item:hover .p-view{opacity:1;transform:none;}
+@media (max-width:900px){
+  .bento{grid-template-columns:repeat(2,1fr);}
+  .p-item,.p-item.big,.p-item.small{grid-column:span 1;aspect-ratio:1/1;}
+}
+
+/* lightbox */
+.lightbox{
+  position:fixed;inset:0;background:rgba(5,7,13,0.96);backdrop-filter:blur(10px);
+  z-index:700;display:flex;align-items:center;justify-content:center;padding:40px;
+  opacity:0;visibility:hidden;transition:opacity .4s var(--ease),visibility .4s;
+}
+.lightbox.open{opacity:1;visibility:visible;}
+.lightbox-inner{max-width:900px;width:100%;transform:scale(0.94);transition:transform .4s var(--ease);}
+.lightbox.open .lightbox-inner{transform:scale(1);}
+.lightbox img{width:100%;border-radius:14px;border:1px solid var(--line-strong);max-height:72vh;object-fit:contain;background:#000;}
+.lightbox-meta{margin-top:18px;display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;}
+.lightbox-close{
+  position:absolute;top:28px;right:28px;width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--line-strong);background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;
+  font-size:18px;transition:all .3s;
+}
+.lightbox-close:hover{border-color:var(--cyan);transform:rotate(90deg);}
+
+/* ============ EDITORIAL SHOWCASES ============ */
+.showcase{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.showcase.reverse .showcase-img{order:2;}
+.showcase-img{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line-strong);aspect-ratio:1/1;}
+.showcase-img img{width:100%;height:100%;object-fit:cover;}
+.showcase h2{font-family:var(--font-display);font-size:clamp(32px,4.6vw,50px);font-weight:700;line-height:1.05;}
+.showcase-list{list-style:none;margin:26px 0 32px;}
+.showcase-list li{
+  padding:14px 0;border-bottom:1px solid var(--line);color:var(--text-1);font-size:15px;
+  display:flex;align-items:center;gap:12px;
+}
+.showcase-list li::before{content:'';width:5px;height:5px;background:var(--cyan);border-radius:50%;box-shadow:0 0 8px var(--cyan);}
+@media (max-width:900px){
+  .showcase,.showcase.reverse{grid-template-columns:1fr;}
+  .showcase.reverse .showcase-img{order:0;}
+}
+
+.dual-thumbs{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.thumb-case{border-radius:18px;overflow:hidden;border:1px solid var(--line-strong);position:relative;}
+.thumb-case img{width:100%;aspect-ratio:3/2;object-fit:cover;transition:transform .7s var(--ease);}
+.thumb-case:hover img{transform:scale(1.05);}
+.thumb-meta{padding:22px;background:var(--bg-1);}
+.thumb-meta .tc-tag{font-family:var(--font-mono);font-size:11px;color:var(--purple);letter-spacing:0.06em;}
+.thumb-meta h3{font-family:var(--font-display);font-size:20px;margin:8px 0 10px;}
+.thumb-meta span{display:block;font-size:13px;color:var(--text-2);}
+@media (max-width:768px){.dual-thumbs{grid-template-columns:1fr;}}
+
+.edit-triple{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.edit-card{border-radius:18px;overflow:hidden;border:1px solid var(--line);position:relative;aspect-ratio:3/4;}
+.edit-card img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .6s var(--ease);}
+.edit-card:hover img{transform:scale(1.06);}
+.edit-card .p-overlay{padding:20px;}
+.edit-card .p-title{font-size:17px;}
+@media (max-width:768px){.edit-triple{grid-template-columns:1fr;}}
+
+/* ============ PROCESS ============ */
+.process-line{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:24px;}
+.process-line::before{
+  content:'';position:absolute;top:22px;left:0;right:0;height:1px;background:var(--line);z-index:0;
+}
+.p-step{position:relative;z-index:1;}
+.p-step-num{
+  width:44px;height:44px;border-radius:50%;background:var(--bg-0);border:1px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:13px;
+  margin-bottom:22px;transition:all .4s var(--ease);
+}
+.p-step:hover .p-step-num{border-color:var(--cyan);box-shadow:0 0 16px var(--cyan-soft);color:var(--cyan);}
+.p-step h4{font-family:var(--font-display);font-size:16.5px;font-weight:600;margin-bottom:8px;}
+.p-step p{font-size:13.5px;color:var(--text-2);}
+@media (max-width:900px){
+  .process-line{grid-template-columns:1fr;gap:36px;}
+  .process-line::before{display:none;}
+}
+
+/* ============ WHY ============ */
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.why-card{
+  padding:32px 24px;border:1px solid var(--line);border-radius:18px;background:var(--bg-1);
+  transition:transform .4s var(--ease),border-color .4s;
+}
+.why-card:hover{transform:translateY(-6px);border-color:var(--line-strong);}
+.why-card h4{font-family:var(--font-display);font-size:16.5px;margin:18px 0 10px;}
+.why-card p{font-size:13.5px;color:var(--text-2);}
+.why-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.03);border:1px solid var(--line-strong);}
+.why-icon svg{width:18px;height:18px;stroke:var(--cyan);}
+@media (max-width:900px){.why-grid{grid-template-columns:1fr 1fr;}}
+@media (max-width:560px){.why-grid{grid-template-columns:1fr;}}
+
+/* ============ INSTAGRAM ============ */
+.insta{
+  text-align:center;padding:100px 0;position:relative;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.insta h2{font-family:var(--font-display);font-size:clamp(28px,4vw,42px);margin-top:16px;}
+.insta-handle{
+  font-family:var(--font-mono);font-size:20px;margin:22px 0 30px;color:var(--text-0);
+  background:linear-gradient(100deg,#f58529,#dd2a7b,#8134af,#515bd4);-webkit-background-clip:text;background-clip:text;color:transparent;
+  display:inline-block;font-weight:700;
+}
+
+/* ============ FINAL CTA ============ */
+.final-cta{
+  position:relative;text-align:center;padding:160px 0;overflow:hidden;
+}
+.final-cta h2{
+  font-family:var(--font-display);font-weight:800;font-size:clamp(46px,9vw,110px);line-height:0.98;letter-spacing:-0.01em;
+}
+.final-cta .actions{display:flex;gap:16px;justify-content:center;margin-top:44px;flex-wrap:wrap;}
+
+/* ============ FOOTER ============ */
+footer{padding:60px 0 40px;border-top:1px solid var(--line);}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:30px;margin-bottom:40px;}
+.footer-links{display:flex;gap:28px;}
+.footer-links a{font-size:14px;color:var(--text-1);transition:color .3s;}
+.footer-links a:hover{color:var(--cyan);}
+.footer-bottom{display:flex;justify-content:space-between;color:var(--text-2);font-size:12.5px;font-family:var(--font-mono);flex-wrap:wrap;gap:10px;}
+
+/* misc */
+.magnetic{will-change:transform;}
+::selection{background:var(--purple);color:#fff;}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<!-- ============ NAV ============ -->
+<header id="siteHeader">
+  <div class="wrap nav-inner">
+    <a href="#home" class="logo"><span class="dot"></span>MISHRA AI WORLD</a>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta magnetic">Let's Work Together</a>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home">Home</a>
+  <a href="#about">About</a>
+  <a href="#services">Services</a>
+  <a href="#work">Work</a>
+  <a href="#process">Process</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="home">
+  <div class="glow" style="width:600px;height:600px;top:-10%;left:-10%;background:var(--purple);opacity:0.18;"></div>
+  <div class="glow" style="width:500px;height:500px;top:20%;right:-10%;background:var(--cyan);opacity:0.14;"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="hero-badge eyebrow reveal visible">AI-Powered Creative Studio</div>
+      <h1 class="reveal visible">MISHRA<br><span class="grad">AI WORLD</span></h1>
+      <div class="hero-sub reveal visible">VIDEO EDITING · THUMBNAILS · DESIGN · AI CONTENT</div>
+      <p class="hero-desc reveal visible">I turn ideas into visuals that people remember.</p>
+      <div class="hero-actions reveal visible">
+        <a href="#work" class="btn btn-primary magnetic">View My Work</a>
+        <a href="#contact" class="btn btn-ghost magnetic">Let's Work Together</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="frame" id="heroFrame">
+        <img src="WhatsApp Image 2026-08-31 at 9.07.36 PM.jpeg" alt="Om Mishra, creative editor and designer at Mishra AI World" loading="eager" >
+      </div>
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+      <div class="scan"></div>
+      <div class="rec-chip"><span class="rec-dot"></span>LIVE EDIT</div>
+      <div class="stat-chip s1"><b>PS · PR · DVR</b>Daily toolkit</div>
+      <div class="stat-chip s2"><b>5</b>Core services</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="section" id="about">
+  <div class="wrap about-grid">
+    <div class="about-portrait reveal">
+      <img src="ChatGPT Image Sep 11, 2026, 09_44_26 PM.png" alt="Om Mishra, the creative behind Mishra AI World" loading="lazy">
+    </div>
+    <div class="about">
+      <div class="eyebrow reveal">About</div>
+      <h2 class="reveal">I'M THE MIND<br>BEHIND MISHRA AI WORLD.</h2>
+      <p class="about-text reveal">I'm a creative editor and designer focused on turning ideas into high-impact visual content — blending traditional editing craft with AI-powered workflows to move faster without losing quality.</p>
+      <div class="tags reveal">
+        <span class="tag">VIDEO EDITING</span>
+        <span class="tag">GRAPHIC DESIGN</span>
+        <span class="tag">THUMBNAIL DESIGN</span>
+        <span class="tag">AI CONTENT</span>
+        <span class="tag">PHOTO EDITING</span>
+      </div>
+      <div class="stat-row reveal">
+        <div class="stat-cell"><b>3</b><span>CORE TOOLS</span></div>
+        <div class="stat-cell"><b>5</b><span>SERVICE LINES</span></div>
+        <div class="stat-cell"><b>1:1</b><span>DIRECT COLLAB</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section class="section" id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow reveal">Services</div>
+      <h2 class="reveal">WHAT I CREATE</h2>
+    </div>
+    <div class="services-grid stagger">
+      <div class="service-card reveal">
+        <div class="glow-hover"></div>
+        <div class="service-num">01</div>
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+        <h3>Video Editing</h3>
+        <ul>
+          <li>Reels</li>
+          <li>Short-form content</li>
+          <li>Cinematic edits</li>
+          <li>Motion graphics</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="glow-hover"></div>
+        <div class="service-num">02</div>
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div>
+        <h3>Graphic Design</h3>
+        <ul>
+          <li>Social media creatives</li>
+          <li>Posters</li>
+          <li>Brand visuals</li>
+          <li>Marketing graphics</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="glow-hover"></div>
+        <div class="service-num">03</div>
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg></div>
+        <h3>AI Content</h3>
+        <ul>
+          <li>AI visuals</li>
+          <li>AI video concepts</li>
+          <li>Creative advertisements</li>
+          <li>AI-powered content</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="glow-hover"></div>
+        <div class="service-num">04</div>
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
+        <h3>Photo Editing</h3>
+        <ul>
+          <li>Retouching</li>
+          <li>Color correction</li>
+          <li>Background replacement</li>
+          <li>Creative manipulation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PORTFOLIO ============ -->
+<section class="section" id="work">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow reveal">Portfolio</div>
+      <h2 class="reveal">SELECTED WORK</h2>
+      <p class="reveal">A collection of visuals created to capture attention.</p>
+    </div>
+    <div class="filters reveal">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="thumbnails">Thumbnails</button>
+      <button class="filter-btn" data-filter="graphic">Graphic Design</button>
+      <button class="filter-btn" data-filter="ai">AI Content</button>
+      <button class="filter-btn" data-filter="photo">Photo Editing</button>
+    </div>
+    <div class="bento" id="bento">
+      <div class="p-item big reveal" data-cat="ai graphic" data-img="assets/10511.jpg" data-title="Mishra AI World" data-desc="Brand identity concept for the studio's AI-powered positioning." data-catlabel="AI Content · Brand">
+        <img src="Mishra_AI_World_Creative_Poster.jpg" alt="Mishra AI World brand identity concept" loading="lazy" style="font-weight: 300; height: 440;">
+        <div class="p-overlay">
+          <div class="p-cat">AI CONTENT · BRAND</div>
+          <div class="p-title">Mishra AI World</div>
+          <div class="p-desc">Brand identity concept for the studio's positioning.</div>
+          <div class="p-view">VIEW PROJECT →</div>
+        </div>
+      </div>
+      <div class="p-item reveal" data-cat="graphic" data-img="assets/9638.jpg" data-title="Graphic Designer Promo" data-desc="Service promotion creative for graphic design offerings." data-catlabel="Graphic Design">
+        <img src="ChatGPT Image Sep 11, 2026, 10_18_38 PM.png" alt="Graphic design service promotional poster" loading="lazy">
+        <div class="p-overlay">
+          <div class="p-cat">GRAPHIC DESIGN</div>
+          <div class="p-title">Design That Speaks</div>
+          <div class="p-desc">Service promotion creative for design offerings.</div>
+          <div class="p-view">VIEW PROJECT →</div>
+        </div>
+      </div>
+      <div class="p-item small reveal" data-cat="thumbnails" data-img="assets/8568.jpg" data-title="Minecraft Survival" data-desc="Gaming thumbnail with creative direction and visual storytelling." data-catlabel="Thumbnail · Gaming">
+        <img src="WhatsApp Image 2026-08-31 at 9.18.21 PM.jpeg" alt="Minecraft survival gaming thumbnail" loading="lazy">
+        <div class="p-overlay">
+          <div class="p-cat">THUMBNAIL · GAMING</div>
+          <div class="p-title">Minecraft Survival</div>
+          <div class="p-desc">Gaming thumbnail, creative direction & visual storytelling.</div>
+          <div class="p-view">VIEW PROJECT →</div>
+        </div>
+      </div>
+      <div class="p-item small reveal" data-cat="thumbnails" data-img="assets/8570.jpg" data-title="Haunted Property" data-desc="Horror thumbnail with cinematic manipulation." data-catlabel="Thumbnail · Horror">
+        <img src="WhatsApp Image 2026-08-31 at 9.18.20 PM.jpeg" alt="Haunted property horror thumbnail" loading="lazy">
+        <div class="p-overlay">
+          <div class="p-cat">THUMBNAIL · HORROR</div>
+          <div class="p-title">Haunted Property</div>
+          <div class="p-desc">Horror thumbnail, creative direction & cinematic manipulation.</div>
+          <div class="p-view">VIEW PROJECT →</div>
+        </div>
+      </div>
+      <div class="p-item big reveal" data-cat="thumbnails photo" data-img="assets/8867.jpg" data-title="Thumbnails, Reels & Photo Edits" data-desc="Full service showcase across thumbnail, reel and photo editing work." data-catlabel="Thumbnail · Reels · Photo">
+        <img src="ChatGPT Image Sep 11, 2026, 10_19_01 PM.png" alt="Thumbnail, reels editing and photo editing service showcase" loading="lazy">
+        <div class="p-overlay">
+          <div class="p-cat">THUMBNAIL · REELS · PHOTO</div>
+          <div class="p-title">Full Service Showcase</div>
+          <div class="p-desc">Thumbnail design, reels editing and photo editing in one frame.</div>
+          <div class="p-view">VIEW PROJECT →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">✕</button>
+  <div class="lightbox-inner">
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-meta">
+      <div>
+        <div class="p-cat" id="lightboxCat"></div>
+        <div class="p-title" id="lightboxTitle"></div>
+      </div>
+      <p class="p-desc" id="lightboxDesc" style="max-width:360px;"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ GRAPHIC DESIGN SHOWCASE ============ -->
+<section class="section">
+  <div class="wrap showcase">
+    <div class="showcase-img reveal">
+      <img src="ChatGPT Image Sep 11, 2026, 10_50_27 PM.png" alt="Graphic design showcase for Mishra AI World" loading="lazy">
+    </div>
+    <div>
+      <div class="eyebrow reveal">Editorial</div>
+      <h2 class="reveal">DESIGN<br>THAT SPEAKS.</h2>
+      <ul class="showcase-list reveal">
+        <li>Brand visuals</li>
+        <li>Social media creatives</li>
+        <li>Marketing graphics</li>
+        <li>Posters</li>
+        <li>Promotional designs</li>
+      </ul>
+      <a href="#work" class="btn btn-ghost magnetic reveal">View Design Work</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THUMBNAIL SHOWCASE ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow reveal">Case Studies</div>
+      <h2 class="reveal">THUMBNAILS<br>THAT STOP<br>THE SCROLL.</h2>
+    </div>
+    <div class="dual-thumbs">
+      <div class="thumb-case reveal">
+        <img src="WhatsApp Image 2026-08-31 at 9.18.21 PM (1).jpeg" alt="Minecraft gaming thumbnail case study" loading="lazy">
+        <div class="thumb-meta">
+          <span class="tc-tag">GAMING THUMBNAIL</span>
+          <h3>Creative Direction</h3>
+          <span>Visual Storytelling</span>
+        </div>
+      </div>
+      <div class="thumb-case reveal">
+        <img src="WhatsApp Image 2026-08-31 at 9.18.20 PM.jpeg" alt="Haunted property horror thumbnail case study" loading="lazy">
+        <div class="thumb-meta">
+          <span class="tc-tag">HORROR THUMBNAIL</span>
+          <h3>Creative Direction</h3>
+          <span>Cinematic Manipulation</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EDITING SHOWCASE ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow reveal">Craft</div>
+      <h2 class="reveal">EDIT.<br>CREATE.<br>IMPACT.</h2>
+    </div>
+    <div class="edit-triple">
+      <div class="edit-card reveal">
+        <img src="free_fire_thumbnail.jpg" alt="Thumbnail design service preview" loading="lazy">
+        <div class="p-overlay"><div class="p-title">Thumbnail Design</div></div>
+      </div>
+      <div class="edit-card reveal">
+        <img src="Capture.PNG" alt="Reels editing service preview" loading="lazy">
+        <div class="p-overlay"><div class="p-title">Reels Editing</div></div>
+      </div>
+      <div class="edit-card reveal">
+        <img src="before_after_8k.jpg" alt="Photo editing service preview" loading="lazy">
+        <div class="p-overlay"><div class="p-title">Photo Editing</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section class="section" id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow reveal">Process</div>
+      <h2 class="reveal">FROM IDEA<br>TO IMPACT.</h2>
+    </div>
+    <div class="process-line">
+      <div class="p-step reveal"><div class="p-step-num">01</div><h4>Discover</h4><p>Understand the idea, audience and goal.</p></div>
+      <div class="p-step reveal"><div class="p-step-num">02</div><h4>Plan</h4><p>Create the visual direction.</p></div>
+      <div class="p-step reveal"><div class="p-step-num">03</div><h4>Create</h4><p>Editing, design and AI production.</p></div>
+      <div class="p-step reveal"><div class="p-step-num">04</div><h4>Refine</h4><p>Polish every detail.</p></div>
+      <div class="p-step reveal"><div class="p-step-num">05</div><h4>Deliver</h4><p>Deliver the final high-quality result.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow reveal">Why Me</div>
+      <h2 class="reveal">WHY WORK<br>WITH ME?</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.5.4.8 1 .8 1.6v.7h6.4v-.7c0-.6.3-1.2.8-1.6A7 7 0 0 0 12 2z"/></svg></div>
+        <h4>Creative Thinking</h4>
+        <p>Visual storytelling beyond basic editing.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg></div>
+        <h4>AI-Powered Workflow</h4>
+        <p>Modern AI tools combined with creative direction.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg></div>
+        <h4>Attention to Detail</h4>
+        <p>Every frame and design element matters.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <h4>Client-Focused</h4>
+        <p>Your idea → my execution.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSTAGRAM ============ -->
+<section class="insta">
+  <div class="wrap">
+    <div class="eyebrow reveal">Follow Along</div>
+    <h2 class="reveal">MORE CREATIVE WORK<br>ON INSTAGRAM</h2>
+    <div class="insta-handle reveal">@mishra_ai_editor</div>
+    <div class="reveal"><a href="https://instagram.com/mishra_ai_editor" target="_blank" rel="noopener" class="btn btn-primary magnetic">Follow on Instagram</a></div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="final-cta" id="contact">
+  <div class="glow" style="width:700px;height:700px;top:0%;left:50%;transform:translateX(-50%);background:var(--purple);opacity:0.16;"></div>
+  <div class="wrap">
+    <div class="eyebrow reveal" style="justify-content:center;">Let's Talk</div>
+    <h2 class="reveal">HAVE AN<br>IDEA?</h2>
+    <h2 class="reveal grad" style="background:linear-gradient(100deg,var(--cyan),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent;">LET'S<br>CREATE IT.</h2>
+    <div class="actions reveal">
+      <a href="https://www.fiverr.com/s/wbAbgq8" target="_blank" rel="noopener" class="btn btn-primary magnetic">Start a Project</a>
+      <a href="https://instagram.com/mishra_ai_editor" target="_blank" rel="noopener" class="btn btn-ghost magnetic">DM Me</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <div class="logo"><span class="dot"></span>MISHRA AI WORLD</div>
+        <p style="color:var(--text-2);font-size:13px;margin-top:10px;">AI-Powered Creative Studio</p>
+        <p style="color:var(--text-2);font-size:12.5px;font-family:var(--font-mono);margin-top:4px;">Video Editing · Design · AI Content</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://instagram.com/mishra_ai_editor" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.fiverr.com/s/wbAbgq8" target="_blank" rel="noopener">Fiverr</a>
+        <a href="ommishra@17082008" target="_blank" rel="noopener">Email</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Mishra AI World</span>
+      <span>Built for creators who move fast.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ---- nav scroll state ----
+const header = document.getElementById('siteHeader');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 40);
+}, {passive:true});
+
+// ---- mobile menu ----
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  hamburger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+}));
+
+// ---- scroll reveal ----
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      io.unobserve(e.target);
+    }
+  });
+}, {threshold:0.15, rootMargin:'0px 0px -40px 0px'});
+revealEls.forEach(el => io.observe(el));
+
+// ---- hero frame reveal ----
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => document.getElementById('heroFrame').classList.add('in'), 200);
+});
+
+// ---- magnetic buttons ----
+document.querySelectorAll('.magnetic').forEach(btn => {
+  btn.addEventListener('mousemove', (e) => {
+    const r = btn.getBoundingClientRect();
+    const x = e.clientX - r.left - r.width/2;
+    const y = e.clientY - r.top - r.height/2;
+    btn.style.transform = `translate(${x*0.18}px, ${y*0.35}px)`;
+  });
+  btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+});
+
+// ---- portfolio filter ----
+const filterBtns = document.querySelectorAll('.filter-btn');
+const items = document.querySelectorAll('.p-item');
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    items.forEach(item => {
+      const cats = item.dataset.cat.split(' ');
+      const show = f === 'all' || cats.includes(f);
+      item.classList.toggle('hide', !show);
+    });
+  });
+});
+
+// ---- lightbox ----
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxTitle = document.getElementById('lightboxTitle');
+const lightboxDesc = document.getElementById('lightboxDesc');
+const lightboxCat = document.getElementById('lightboxCat');
+items.forEach(item => {
+  item.addEventListener('click', () => {
+    lightboxImg.src = item.dataset.img;
+    lightboxImg.alt = item.dataset.title;
+    lightboxTitle.textContent = item.dataset.title;
+    lightboxDesc.textContent = item.dataset.desc;
+    lightboxCat.textContent = item.dataset.catlabel;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+});
+function closeLightbox(){
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', (e) => { if(e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeLightbox(); });
+
+// ---- subtle parallax on hero image ----
+const heroFrame = document.getElementById('heroFrame');
+window.addEventListener('mousemove', (e) => {
+  if(window.innerWidth < 900) return;
+  const x = (e.clientX / window.innerWidth - 0.5) * 10;
+  const y = (e.clientY / window.innerHeight - 0.5) * 10;
+  heroFrame.style.transform = `translate(${x}px, ${y}px)`;
+});
+</script>
+</body>
+</html>
